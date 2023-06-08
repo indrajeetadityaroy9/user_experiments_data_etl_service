@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+  etl-app:
+    build: .
+    command: python3 app.py
+    volumes:
+      - .:/app
+    ports:
+      - "5001:5000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://postgres:password@db:5432/postgres
+
+    container_name: etl-app
